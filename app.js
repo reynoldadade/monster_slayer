@@ -11,36 +11,65 @@ new Vue({
 		startNewGame: function () {
 			this.gameIsRunning = true;
 			this.monsterHealth = 100;
-			this.gameIsRunning = 100;
+			this.playerHealth = 100;
 		},
 		//this method allows the user to attack
 		attack: function () {
-			let max = 10;
-			let min = 3;
-			let damage = Math.max(Math.floor(Math.random() * max) + 1, min);
-			this.monsterHealth -= damage;
-
-			if (this.monsterHealth <= 0) {
-				alert('You won!');
-				this.gameIsRunning = false;
+			this.monsterHealth -= this.calculateDamage(3, 10);
+			if (this.checkWin()) {
 				return;
 			}
+			this.monsterAttacks();
 
-			max = 12;
-			min = 5;
-			damage = Math.max(Math.floor(Math.random() * max) + 1, min);
-			this.playerHealth -= damage;
-			if (this.playerHealth <= 0) {
-				alert('You lost!');
-				this.gameIsRunning = false;
-				return;
-			}
+			//this.checkWin();
 		},
 		//this method allows the user to use a special attack
-		specialAttack: function () {},
+		specialAttack: function () {
+			this.monsterHealth -= this.calculateDamage(10, 20);
+			if (this.checkWin()) {
+				return;
+			}
+			this.monsterAttacks();
+		},
 		//this method allows the user to heal
-		heal: function () {},
+		heal: function () {
+			if (this.playerHealth <= 90) {
+				this.playerHealth += 10;
+			}
+			this.playerHealth = 100;
+			this.monsterAttacks();
+		},
 		//this method allows the user to giveUp
-		giveUp: function () {},
+		giveUp: function () {
+			this.gameIsRunning = false;
+		},
+		//this mthod allows monster to attack you
+		monsterAttacks: function () {
+			this.playerHealth -= this.calculateDamage(5, 12);
+			this.checkWin();
+		},
+		//this method allows me to calculate damage
+		calculateDamage: function (min, max) {
+			let damage = Math.max(Math.floor(Math.random() * max) + 1, min);
+			return damage;
+		},
+		checkWin: function () {
+			if (this.monsterHealth <= 0) {
+				if (confirm('You won! New Game?')) {
+					this.startNewGame();
+				} else {
+					this.gameIsRunning = false;
+				}
+				return true;
+			} else if (this.playerHealth <= 0) {
+				if (confirm('You Lost! New Game?')) {
+					this.startNewGame();
+				} else {
+					this.gameIsRunning = false;
+				}
+				return true;
+			}
+			return false;
+		},
 	},
 });
