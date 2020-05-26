@@ -19,7 +19,11 @@ new Vue({
 		attack: function () {
 			const damage = this.calculateDamage(3, 10);
 			this.monsterHealth -= damage;
-			this.logGameActions('Player hits monster with attack of ', damage);
+			this.logGameActions(
+				'Player hits monster with attack of ',
+				damage,
+				true
+			);
 			if (this.checkWin()) {
 				return;
 			}
@@ -33,7 +37,8 @@ new Vue({
 			this.monsterHealth -= damage;
 			this.logGameActions(
 				'Player hits monster with special attack of ',
-				damage
+				damage,
+				true
 			);
 			if (this.checkWin()) {
 				return;
@@ -49,7 +54,8 @@ new Vue({
 			this.playerHealth = 100;
 			this.logGameActions(
 				'Player has healed himself life is now ',
-				this.playerHealth
+				this.playerHealth,
+				true
 			);
 			this.monsterAttacks();
 		},
@@ -57,13 +63,14 @@ new Vue({
 		//this method allows the user to giveUp
 		giveUp: function () {
 			this.gameIsRunning = false;
+			this.logGameActions('Player has given up ', 0, true);
 		},
 
 		//this mthod allows monster to attack you
 		monsterAttacks: function () {
 			const damage = this.calculateDamage(5, 12);
 			this.playerHealth -= damage;
-			this.logGameActions('Monster hits player with ', damage);
+			this.logGameActions('Monster hits player with ', damage, false);
 			this.checkWin();
 		},
 
@@ -89,10 +96,10 @@ new Vue({
 				this.gameIsRunning = false;
 			}
 		},
-		logGameActions: function (message, damage) {
+		logGameActions: function (message, damage, isPlayer) {
 			let moves = [...this.turns];
 			moves.unshift({
-				isPlayer: true,
+				isPlayer: isPlayer,
 				text: message + damage,
 			});
 			this.turns = moves;
