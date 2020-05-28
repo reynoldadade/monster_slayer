@@ -63,7 +63,7 @@ new Vue({
 		//this method allows the user to giveUp
 		giveUp: function () {
 			this.gameIsRunning = false;
-			this.logGameActions('Player has given up ', 0, true);
+			this.logGameActions('Player has given up :', 0, true);
 		},
 
 		//this mthod allows monster to attack you
